@@ -35,6 +35,9 @@ proguard/
 # Android Studio captures folder
 captures/
 
+# Dart
+.dart_tool/
+
 # IntelliJ
 *.iml
 .idea/workspace.xml
