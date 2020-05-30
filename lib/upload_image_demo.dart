@@ -31,7 +31,7 @@ class UploadImageDemo extends StatefulWidget {
 
 class UploadImageDemoState extends State<UploadImageDemo> {
   static final String host = Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://127.0.0.1:8000';
-  static final String uploadEndPoint = host + '/characters/characterimages/25/';
+  static final String uploadEndPoint = host + '/characters/characterimages/';
   Future<File> file;
   String status = '';
   String base64Image;
@@ -68,13 +68,22 @@ class UploadImageDemoState extends State<UploadImageDemo> {
 //  }
 
   upload(String fileName) {
-    debugPrint(fileName);
-    http.put(uploadEndPoint, body: {
-      "image": base64Image,
-      "name": fileName,
-      "character": "http://127.0.0.1:8000/characters/characters/1/",
-//      "id": "25"
-    })
+    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTkwODUwMDg3LCJqdGkiOiIxMGRjNGYwMWM1NWE0NDQ0YTVlZWY2OWU2ZWNkMzhjZSIsInVzZXJfaWQiOjF9.-BA67iis7oMR93u2L5rw0V3xm6sBDe0RrbUbIv03p6Y";
+    Map<String,String> headers = {'Content-Type':'application/x-www-form-urlencoded','authorization':'Bearer $token'};
+    http.post(uploadEndPoint,
+        body: {
+        "image": base64Image,
+        "name": fileName,
+        "character": "http://127.0.0.1:8000/characters/characters/1/",
+        },
+        headers: headers)
+//    http.delete(uploadEndPoint)
+//    http.put(uploadEndPoint, body: {
+//      "image": base64Image,
+//      "name": fileName,
+//      "character": "http://127.0.0.1:8000/characters/characters/1/",
+////      "id": "25"
+//    })
 //    http.post(uploadEndPoint, body: {
 //      "image": base64Image,
 //      "name": fileName,
@@ -87,8 +96,8 @@ class UploadImageDemoState extends State<UploadImageDemo> {
       setStatus(result.statusCode == 200 || result.statusCode == 201 ? result.body : errMessage);
       debugPrint(result.statusCode.toString());
     }).catchError((error) {
-      setStatus(error);
-//      debugPrint(error.toString());
+//      setStatus(error);
+      debugPrint(error.toString());
     });
   }
 
