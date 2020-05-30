@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
+import 'dart:io' show Platform;
 //class Photo {
 //  final int id;
 //  final String title;
@@ -30,9 +30,8 @@ class UploadImageDemo extends StatefulWidget {
 }
 
 class UploadImageDemoState extends State<UploadImageDemo> {
-  //
-  static final String uploadEndPoint =
-      'http://127.0.0.1:8000/characters/characterimages/';
+  static final String host = Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://127.0.0.1:8000';
+  static final String uploadEndPoint = host + '/characters/characterimages/25/';
   Future<File> file;
   String status = '';
   String base64Image;
@@ -69,13 +68,22 @@ class UploadImageDemoState extends State<UploadImageDemo> {
 //  }
 
   upload(String fileName) {
-    http.post(uploadEndPoint, body: {
+    debugPrint(fileName);
+    http.put(uploadEndPoint, body: {
       "image": base64Image,
       "name": fileName,
-      "character": "http://127.0.0.1:8000/characters/characters/1/"
-    }).then((result) {
+      "character": "http://127.0.0.1:8000/characters/characters/1/",
+//      "id": "25"
+    })
+//    http.post(uploadEndPoint, body: {
+//      "image": base64Image,
+//      "name": fileName,
+//      "character": "http://127.0.0.1:8000/characters/characters/1/",
+//      "id": "25"
+//    })
+    .then((result) {
 //      var file = parsePhotos(result.body);
-//      debugPrint(file.toString());
+      debugPrint(result.body.toString());
       setStatus(result.statusCode == 200 || result.statusCode == 201 ? result.body : errMessage);
       debugPrint(result.statusCode.toString());
     }).catchError((error) {
