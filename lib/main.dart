@@ -1,3 +1,4 @@
+import 'package:animecharactersapiflutter/home_demo.dart';
 import 'package:animecharactersapiflutter/upload_image_demo.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: UploadImageDemo(),
+//      home: UploadImageDemo(),
+      home: HomeDemo(),
     );
   }
 }

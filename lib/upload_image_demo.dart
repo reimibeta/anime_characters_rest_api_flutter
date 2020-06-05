@@ -19,41 +19,7 @@ import 'dart:io' show Platform;
 //    );
 //  }
 //}
-class Token {
-  final String access;
-  final String refresh;
 
-  Token({this.access,this.refresh});
-
-  factory Token.fromJson(Map<String, dynamic> json){
-    return Token(
-      access: json['access'] as String,
-      refresh: json['refresh'] as String
-    );
-  }
-}
-
-class AuthenticationToken {
-  static final String host = Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://127.0.0.1:8000';
-  static final String uploadEndPoint = host + '/api/token/';
-
-  String accessToken(){
-    String data;
-    http.post(uploadEndPoint,
-        body: {
-          "email": "reimi846@gmail.com",
-          "password": "iwtdstw",
-        })
-        .then((result) {
-          data = result.body;
-      debugPrint(result.body.toString());
-    }).catchError((error) {
-      debugPrint(error.toString());
-      data = error.toString();
-    });
-    return data;
-  }
-}
 
 class UploadImageDemo extends StatefulWidget {
   UploadImageDemo() : super();
@@ -93,12 +59,12 @@ class UploadImageDemoState extends State<UploadImageDemo> {
       return;
     }
     String fileName = tmpFile.path.split('/').last;
-//    upload(fileName);
-    var token = AuthenticationToken();
-    var tt = token.accessToken();
-    var parsed = json.decode(tt).cast<Map<String, dynamic>>();
-    var data = parsed.map<Token>((json) => Token.fromJson(json));
-    debugPrint(data);
+    upload(fileName);
+//    var token = AuthenticationToken();
+//    var tt = token.accessToken();
+//    var parsed = json.decode(tt).cast<Map<String, dynamic>>();
+//    var data = parsed.map<Token>((json) => Token.fromJson(json));
+//    debugPrint(data);
   }
 
 //  List<Photo> parsePhotos(String responseBody) {
