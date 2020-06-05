@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import '../utils/hosts.dart';
 
 class Token {
   final String access;
@@ -18,9 +19,9 @@ class Token {
 }
 
 class AuthenticationJWT {
-  static final String host = Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://127.0.0.1:8000';
-  static final String accessTokenEndPoint = host + '/api/token/';
-  static final String refreshTokenEndPoint = host + '/api/token/refresh/';
+//  static final String host = Platform.isAndroid ? 'http://10.0.2.2:8000' : 'http://127.0.0.1:8000';
+//  static final String accessTokenEndPoint = HOST_URL_ACCESS_TOKEN;
+//  static final String refreshTokenEndPoint = HOST_URL_REFRESH_TOKEN;
 
 //  Future<String> accessToken() async {
 //    var data = http.post(tokenEndPoint,
@@ -55,7 +56,7 @@ class AuthenticationJWT {
   AuthenticationJWT({@required this.email,@required this.password});
 
   Future<Token> accessToken() async {
-    final response = await http.post(accessTokenEndPoint,
+    final response = await http.post(HOST_URL_ACCESS_TOKEN,
       body: {
         "email": this.email,
         "password": this.password,
@@ -68,7 +69,7 @@ class AuthenticationJWT {
   }
 
   Future<Token> refreshToken({@required String refresh}) async {
-    final response = await http.post(refreshTokenEndPoint,
+    final response = await http.post(HOST_URL_REFRESH_TOKEN,
         body: {
           "refresh": refresh,
         }

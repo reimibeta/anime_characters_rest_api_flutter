@@ -25,6 +25,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   image_picker: ^0.6.7
   http: ^0.12.1
+#  cached_network_image: ^2.2.0+1
+  flutter_bloc: ^0.13.0
 
 dev_dependencies:
   flutter_test:
