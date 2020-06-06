@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'bloc/bloc_profiles.dart';
 //import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 class HomeDemo extends StatefulWidget {
   @override
@@ -17,31 +18,41 @@ class _HomeDemoState extends State<HomeDemo> {
   var refreshToken = "";
   //
   var profileUsers = ProfileUsers(accessToken: null,refreshToken: null);
-//  var profiles;
-//  @override
-//  Future<void> initState() async {
-//    profiles = await profileUsers.listUsers();
-////    var token = authToken.accessToken();
-////    debugPrint('token: $token');
-//    super.initState();
-//  }
-//  @override
-//  void setState(fn) {
-//    profiles = profileUsers.listUsers();
-//    debugPrint(profiles);
-//    super.setState(fn);
-//  }
-//  @override
-//  void initState() {
-//    profiles = profileUsers.listUsers();
-////    debugPrint(profiles);
-//    super.initState();
-//  }
+
   BlocProfile bloc;
   @override
   void initState() {
     bloc = BlocProfile();
     super.initState();
+  }
+  // facebook login
+  bool isLoggedIn = false;
+
+  void onLoginStatusChanged(bool isLoggedIn) {
+    setState(() {
+      this.isLoggedIn = isLoggedIn;
+    });
+  }
+
+  void initiateFacebookLogin() async {
+    var facebookLogin = FacebookLogin();
+    var facebookLoginResult =
+    await facebookLogin.logInWithReadPermissions(['email']);
+//    await facebookLogin.lo
+    switch (facebookLoginResult.status) {
+      case FacebookLoginStatus.error:
+        print("Error");
+        onLoginStatusChanged(false);
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print("CancelledByUser");
+        onLoginStatusChanged(false);
+        break;
+      case FacebookLoginStatus.loggedIn:
+        print("LoggedIn");
+        onLoginStatusChanged(true);
+        break;
+    }
   }
 
   @override
@@ -57,7 +68,7 @@ class _HomeDemoState extends State<HomeDemo> {
               onPressed: () async {
                 var refresh = await authToken.refreshToken(refresh: refreshToken);
                 if(refresh != null){
-                  debugPrint('refresh refresh: ${refresh.access}');
+                  debugPrint('refresh refresh: ${refresh.refresh}, access access: ${refresh.access}');
                 }
               },
             ),
@@ -75,157 +86,20 @@ class _HomeDemoState extends State<HomeDemo> {
             )
           ],
         ),
-        body: _futureBuilder(bloc),
+//        body: _futureBuilder(bloc),
+        body: Container(
+          child: Center(
+            child: isLoggedIn
+                ? Text("Logged In")
+                : RaisedButton(
+              child: Text("Login with Facebook"),
+              onPressed: () => initiateFacebookLogin(),
+            ),
+          ),
+        ),
       ),
     );
   }
-
-//  Future<Widget> _list() async {
-//    return await _profileLists();
-//  }
-
-//  Widget projectWidget() {
-//    return FutureBuilder(
-//      builder: (context, projectSnap) {
-////        if (projectSnap.connectionState == ConnectionState.none &&
-////            projectSnap.hasData == null) {
-////          //print('project snapshot data is: ${projectSnap.data}');
-////          return Container();
-////        }
-////        if(projectSnap.data == null){
-////          return Container();
-////        }
-////        debugPrint(projectSnap.data.length);
-//        if(projectSnap.data != null){
-//          return ListView.builder(
-//            itemCount: projectSnap.data.length,
-//            itemBuilder: (context, index) {
-////              debugPrint('email: ' + projectSnap.data[index].email.toString());
-//              Profile profile = projectSnap.data[index];
-////               debugPrint(projectSnap.data);
-//              return new ListTile(
-//                  contentPadding: const EdgeInsets.fromLTRB(
-//                      10.0, 10.0, 10.0, 10.0),
-//                  title: new Text(
-//                    profile.name, style: TextStyle(fontSize: 20),),
-//                  subtitle: new Text(
-//                    profile.email, style: TextStyle(fontSize: 16),),
-//                  trailing: Container(
-//                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
-//                    child: InkWell(
-//                      child: Icon(Icons
-//                          .pages), // _bookmarkIcon(widget.results[position].favorite),//Icon(Icons.bookmark_border),
-//                    ),
-//                  ),
-//                  // ignore: unnecessary_statements
-//                  onTap: () async {
-//                    debugPrint(profile.url);
-//                  }
-//              );
-//            },
-//          );
-//        } else {
-//          return Container();
-//        }
-//      },
-//      future: profileUsers.listUsers(),
-//    );
-//  }
-
-//  Widget _profileLists() {
-//    if(null){
-//      return ListView.builder(
-//          itemCount: 5,//profiles.length,
-//          itemBuilder: (BuildContext context, int index) {
-//            return new ListTile(
-//                contentPadding: const EdgeInsets.fromLTRB(
-//                    10.0, 10.0, 10.0, 10.0),
-//                title: new Text(
-//                  profiles[index].name, style: TextStyle(fontSize: 20),),
-//                subtitle: new Text(
-//                  profiles[index].email, style: TextStyle(fontSize: 16),),
-//                trailing: Container(
-//                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
-//                  child: InkWell(
-//                    child: Icon(Icons
-//                        .pages), // _bookmarkIcon(widget.results[position].favorite),//Icon(Icons.bookmark_border),
-//                  ),
-//                ),
-//                // ignore: unnecessary_statements
-//                onTap: () async {
-//                  debugPrint(profiles[index].url);
-//                }
-//            );
-//          }
-//      );
-//    } else {
-//      return Container();
-//    }
-////    return FutureBuilder<List<Profile>>(
-////      future: profileUsers.listUsers(),
-////      builder: (context, profile) {
-//
-////      },
-////    );
-////    return ListView.builder(
-//////      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//////          crossAxisCount: orientation == Orientation.portrait ? 2 : 3
-//////      ),
-////      itemCount: profile.length ,
-////      itemBuilder: (BuildContext context, int index) {
-////        return new ListTile(
-////            contentPadding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-////            title: new Text(profile[index].name, style: TextStyle(fontSize: 20),),
-////            subtitle: new Text(profile[index].email, style: TextStyle(fontSize: 16),),
-////            trailing: Container(
-////              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
-////              child: InkWell(
-////                child: Icon(Icons.pages),// _bookmarkIcon(widget.results[position].favorite),//Icon(Icons.bookmark_border),
-////              ),
-////            ),
-////            // ignore: unnecessary_statements
-////            onTap:() async {
-////              debugPrint(profile[index].url);
-////            }
-////        );
-//
-////        return GestureDetector(
-////          onTap: (){
-////            print(channel[index].name);
-//////            Navigator.push(
-//////              context,
-//////              CupertinoPageRoute(
-//////                builder: (BuildContext context) => new Player(title: channel[index].name,url: channel[index].url),
-//////              ),
-//////            );
-////          },
-////          child: Card(
-////            child: Stack(
-////              alignment: FractionalOffset.bottomCenter,
-////              children: <Widget>[
-////                Container(
-////                  decoration: BoxDecoration(
-////                    image: DecorationImage(
-////                        image: CachedNetworkImageProvider(channel[index].url),
-////                        fit: BoxFit.contain
-////                    ),
-////                  ),
-////                  margin: const EdgeInsets.only(bottom: 30),
-////                ),
-////                Container(
-////                  alignment: Alignment.center,
-////                  height: 30.0,
-////                  color: Colors.white,
-////                  child: Text(channel[index].name,
-////                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0, color: Colors.black),),
-////                )
-////              ],
-////            ),
-////          ),
-////        );
-////      },
-////    );
-//  }
 
   Widget _futureBuilder(BlocProfile bloc){
     return StreamBuilder(
@@ -246,8 +120,7 @@ class _HomeDemoState extends State<HomeDemo> {
                       itemBuilder: (context, index) {
 
                         Profile profile = profiles.data[index];
-//                        debugPrint('length: ' + profiles.data.length.toString());
-//                        debugPrint('email: ' + profiles.data[index].email.toString());
+
                         return new ListTile(
                             contentPadding: const EdgeInsets.fromLTRB(
                                 10.0, 10.0, 10.0, 10.0),
