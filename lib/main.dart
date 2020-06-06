@@ -1,3 +1,4 @@
+import 'package:animecharactersapiflutter/facebook_login_test.dart';
 import 'package:animecharactersapiflutter/home_demo.dart';
 import 'package:animecharactersapiflutter/upload_image_demo.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
 //      home: UploadImageDemo(),
-      home: HomeDemo(),
+//      home: HomeDemo(),
+      home: FacebookLoginTest(),
     );
   }
 }

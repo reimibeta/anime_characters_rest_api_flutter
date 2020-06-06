@@ -36,8 +36,9 @@ class _HomeDemoState extends State<HomeDemo> {
 
   void initiateFacebookLogin() async {
     var facebookLogin = FacebookLogin();
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     var facebookLoginResult =
-    await facebookLogin.logInWithReadPermissions(['email']);
+    await facebookLogin.logIn(['email']);
 //    await facebookLogin.lo
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.error:
